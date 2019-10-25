@@ -1,0 +1,81 @@
+package org.usfirst.frc.team6459.robot;
+
+import edu.wpi.first.wpilibj.SampleRobot;
+import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Talon;
+
+public class Robot extends SampleRobot {
+
+	Talon kolcuk = new Talon(4);
+	Talon sagrampa = new Talon(5);
+	int autoLoopCounter;
+	
+    RobotDrive AArobot;  
+    Joystick solStick;  
+    Joystick sagStick;
+/*
+ * Robot
+ * Isim atamalari
+ */
+    public Robot() {
+    	AArobot = new RobotDrive(0,1,2,3);
+        solStick = new Joystick(0);
+        sagStick = new Joystick(1);
+        AArobot.stopMotor();
+        kolcuk.stopMotor();
+        sagrampa.stopMotor();
+    }
+/*
+ * TeleOperated
+ * Tank drive ve tus atamalari
+ */
+    public void operatorControl() {
+        AArobot.setSafetyEnabled(true);
+        kolcuk.setSafetyEnabled(true); 
+        kolcuk.set(0.5);
+        sagrampa.setSafetyEnabled(true);
+        while (isOperatorControl() && isEnabled()) {
+        	AArobot.tankDrive(solStick, sagStick);
+/*
+* Simit kolunun kalkis ve inis tus atamalari
+*/
+            if (sagStick.getRawButton(1)) {
+				kolcuk.set(0.4);
+				
+
+            }
+            
+				else if (solStick.getRawButton(1)) {
+					kolcuk.set(-0.3);
+					kolcuk.stopMotor();
+					
+			}  else {
+			
+			}
+/*
+ * Sag rampanin milini kontrol eden motor
+ */
+            if (solStick.getRawButton(3)) {
+				sagrampa.set(1);
+				
+            }
+				else if (solStick.getRawButton(5)) {
+					sagrampa.set(-1);
+					
+			}  else {
+				sagrampa.set(0.0);
+			}
+/*
+ * Nitro
+ */
+            if (solStick.getRawButton(2)) {
+                AArobot.setMaxOutput(1); 
+				
+            }
+            else {
+                AArobot.setMaxOutput(0.5); 
+			}
+        }
+    }
+}

@@ -1,0 +1,100 @@
+package org.usfirst.frc.team6459.robot;
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.Talon;
+
+public class Robot extends IterativeRobot {
+
+	RobotDrive myRobot;
+	Joystick mXboxController = new Joystick(1); // Where "1" is the index of the joystick (you can set this in the Driver Station software).
+	Compressor c = new Compressor(0);
+	int autoLoopCounter = 0;
+	Talon ust = new Talon(4);
+	Talon alt = new Talon(5);
+	Talon cmotor = new Talon(6);
+	
+	/**
+     * This f
+     * unction is run when the robot is first started up and should be
+     * used for any initialization code.
+     */
+    public void robotInit() {
+    	myRobot = new RobotDrive(0,1,2,3);
+    	mXboxController = new Joystick(0);
+    	 alt.stopMotor();
+         ust.stopMotor();
+         cmotor.stopMotor();
+         
+    }
+    
+    /**
+     * This function is run once each time the robot enters autonomous mode
+     */
+    public void autonomousInit() {
+    	autoLoopCounter = 0;
+    }
+
+    /**
+     * This function is called periodically during autonomous
+     */
+    public void autonomousPeriodic() {
+    	if(autoLoopCounter < 100) //Check if we've completed 100 loops (approximately 2 seconds)
+		{
+			myRobot.drive(-0.5, 0.0); 	// drive forwards half speed
+			autoLoopCounter++;
+			} else {
+			myRobot.drive(0.0, 0.0); 	// stop robot
+		}
+    }
+    
+    /**
+     * This function is called once each time the robot enters tele-operated mode
+     */
+    public void teleopInit(){
+    }
+
+    /**
+     * This function is called periodically during operator control
+     */
+    
+    public void teleopPeriodic() {
+myRobot.setSafetyEnabled(true);
+    	double axisValue = mXboxController.getRawAxis(2); // Where "2" is the index of the Y axis on the left stick (see above)
+    	boolean buttonPressed = mXboxController.getRawButton(1); // Where "1" is the index of the button reported by the Windows Control Panel "Game Controllers" display
+ if (mXboxController.getRawButton(1))
+ {
+ c.setClosedLoopControl(true);
+ }
+ else if (mXboxController.getRawButton(2))
+ {
+	c.setClosedLoopControl(false);
+	
+   }
+    if (mXboxController.getRawButton(3)){
+         ust.set(0.7);
+     }
+    if(mXboxController.getRawButton(1)){
+    	alt.set(0.7);
+    }
+    if(mXboxController.getRawButton(4)){
+    	cmotor.set(0.3);
+    }
+    if (mXboxController.getRawButton(5))
+    {
+    myRobot.setMaxOutput(0.5);	
+    }
+ }
+        /**
+     * This function is called periodically during test mode
+     */
+    public void testPeriodic() {
+    	LiveWindow.run();
+    }
+    
+    }
+
+    
+   
